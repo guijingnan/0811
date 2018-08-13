@@ -1,7 +1,11 @@
 import React , {Component} from 'react';
-import {NavBar,List,InputItem,WhiteSpace,WingBlank,Button,Radio} from 'antd-mobile'
+import {NavBar,List,InputItem,WhiteSpace,WingBlank,Button,Radio} from 'antd-mobile';
+import {connect} from 'react-redux';
+import {Redirect} from 'react-router-dom'
 import Logo from '../../components/Logo/logo'
-export default  class Register extends Component{
+import {register} from '../../redux/actions';
+import '../../assets/css/index.less'
+class Register extends Component{
     state={
         username:'',
         password:'',
@@ -14,8 +18,7 @@ export default  class Register extends Component{
         })
     };
     register=()=>{
-        console.log(this.state)
-
+        this.props.register(this.state)
     };
     toLogin=()=>{
 
@@ -23,12 +26,17 @@ export default  class Register extends Component{
     }
     render(){
         const {type} = this.state;
-
+        const {redirectTo,msg} = this.props;
+        if (redirectTo) {
+            return <Redirect to={redirectTo}/>
+        }
         return (
             <div>
                 <NavBar>用户注册</NavBar>
                 <Logo/>
                 <WingBlank>
+                    {/*三点运算符,如果有错误，就输出错误提示*/}
+                    {msg ?<p className='error-msg'>{msg}</p>:null}
                     <List>
                         <InputItem placeholder='请输入用户名' onChange={(val)=>this.handlerChange('username',val)}>用户名</InputItem>
                         <WhiteSpace/>
@@ -53,3 +61,7 @@ export default  class Register extends Component{
         )
     }
 }
+export default connect(
+    state =>state.user,
+    {register}
+)(Register)
