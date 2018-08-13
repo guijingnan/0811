@@ -1,5 +1,5 @@
 import React , {Component} from 'react';
-import {NavBar,List,InputItem,WhiteSpace,WingBlank,Button,Radio} from 'antd-mobile'
+import {NavBar,List,InputItem,WhiteSpace,WingBlank,Button} from 'antd-mobile'
 import Logo from '../../components/Logo/logo'
 export default  class Login extends Component{
     state={
