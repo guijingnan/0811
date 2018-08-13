@@ -10,7 +10,7 @@ class Register extends Component{
         username:'',
         password:'',
         password2:'',
-        type:'dashen'
+        type:'laoban'
     };
     handlerChange=(name,val)=>{
         this.setState({
