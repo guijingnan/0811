@@ -37,10 +37,11 @@ export function login({username,password}) {
         }
     }
 }
-export const updateUser=(user)=>{
+export function updateUser(user){
     return async dispatch=>{
-        const respond = await reqUpdateUser(user);
-        const result = respond.data;
+        const response = await reqUpdateUser(user);
+        console.log("respond",response)
+        const result = response.data;
         if(result.code === 0){
             dispatch(receiveUser(result.data))
         }else{
@@ -48,6 +49,7 @@ export const updateUser=(user)=>{
         }
     }
 };
+/*
 export const getUrl =()=>{
     return async dispatch=>{
     const respond = await reqUrl();
@@ -58,4 +60,4 @@ export const getUrl =()=>{
         dispatch(resetUser(result(result.msg)))
     }
     }
-}
+}*/

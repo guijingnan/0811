@@ -15,6 +15,10 @@ class DashenInfo extends Component{
     };
     setHeader=(header)=>{
         this.setState({header})
+    };
+    save=()=>{
+        console.log("save")
+        this.props.updateUser(this.state)
     }
 
     render(){
@@ -31,7 +35,7 @@ class DashenInfo extends Component{
                               rows={3}
                               onChange={val => this.handleChange('info', val)}/>
 
-                <Button type='primary' onClick={() => this.props.updateUser(this.state)}>保存</Button>
+                <Button type='primary' onClick={this.save}>保存</Button>
             </div>
 
 

@@ -1,4 +1,6 @@
 /*选择头像的组件*/
+/*onclick获取到的是(el: Object, index: number): void,
+                      element有标签元素和对象元素*/
 import React ,{Component} from 'react'
 import {List,Grid} from 'antd-mobile'
 import PropTypes from 'prop-types';
@@ -19,18 +21,21 @@ class HeaderSelector extends Component{
 
     }
     selectHeader=({icon,text})=>{
+
         this.setState({icon})
         // 更新父组件的状态
         this.props.setHeader(text)
     }
 
     render(){
-const {icon} = this.state;
-        const gridHeader = icon?<p>已选择头像<img src={icon} alt='header'/></p>:'请选择头像'
+        const {icon} = this.state;
+        const gridHeader = icon?<div>已选择头像<img src={icon} alt='header'/></div>:'请选择头像'
         return(
             <List renderHeader={() => gridHeader}>
+                {/*data获取的是数组*/}
                 <Grid data={this.headerList}
                       columnNum={5}
+
                       onClick={this.selectHeader}/>
             </List>
 

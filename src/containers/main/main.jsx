@@ -1,16 +1,16 @@
 import React , {Component} from 'react';
 import {Switch, Route} from 'react-router-dom';
-import Cookies from 'js-cookies';
+/*import Cookies from 'js-cookies';*/
 import LaobanInfo from '../laoban-info/laoban-info';
 import DashenInfo from '../dashen-info/dashen-info';
 
 export default  class Main extends Component{
     render(){
-        const userid = Cookies.get('user_id');
+        /*const userid = Cookies.get('user_id');
         if(!userid){
             this.props.history.replace('/login');
             return null
-        }
+        }*/
         return (
             <div>
                 <Switch>
