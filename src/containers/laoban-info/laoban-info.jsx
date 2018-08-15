@@ -1,7 +1,7 @@
 import React ,{Component} from 'react';
 import  {NavBar, InputItem, TextareaItem, Button} from 'antd-mobile'
 import {connect} from 'react-redux';
-/*import {Redirect} from 'react-router-dom';*/
+import {Redirect} from 'react-router-dom';
 import HeaderSelector from "../../components/header-selector/header-selector";
 import {updateUser} from '../../redux/actions'
 
@@ -27,10 +27,10 @@ class LaobanInfo extends Component{
         this.props.updateUser(this.state)
     }
     render(){
-        /*const {user} = this.props;
+        const {user} = this.props;
         if(user.header){
             return <Redirect to='/laoban' />
-        }*/
+        }
     return(
         <div>
             <NavBar>老板信息完善</NavBar>

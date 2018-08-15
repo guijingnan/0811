@@ -10,6 +10,7 @@ import Dashen from '../dashen/dashen';
 import Laoban from '../laoban/laoban';
 import Message from '../message/message';
 import Personal from '../personal/personal';
+import Chat from '../chat/chat'
 import {getRedirectPath} from '../../utils';
 import NavFooter from '../../components/nav-footer/nav-footer'
 import NotFound from "../../components/not-found/not-found";
@@ -68,21 +69,34 @@ import NotFound from "../../components/not-found/not-found";
         if(path ==='/'){
             return <Redirect to={getRedirectPath(user.type,user.header)} />
         }
-        const currentNav = this.navList.find((nav,index)=>nav.path===path)
+        if(user.type==='laoban'){
+            if(path ==='/dashen'){
+              return  <Redirect to='/laoban'/>
+            }
+            this.navList[1].hide = 'true'
+        }else{
+            if(path ==='/laoban'){
+                return  <Redirect to='/dashen'/>
+            }
+            this.navList[0].hide = 'true'
+        }
+        const currentNav = this.navList.find((nav,index)=>nav.path===path);
+
         return (
             <div>
-                <Switch>
-                    {currentNav ? <NavBar>{currentNav.title}</NavBar>:null}
+                {currentNav ? <NavBar className='fixed-top'>{currentNav.title}</NavBar> : null}
 
+                <Switch>
                     <Route path='/laobaninfo' component={LaobanInfo}/>
                     <Route path='/dasheninfo' component={DashenInfo}/>
-                    <Route path='/dashen' component={Dashen}/>
                     <Route path='/laoban' component={Laoban}/>
+                    <Route path='/dashen' component={Dashen}/>
                     <Route path='/message' component={Message}/>
                     <Route path='/personal' component={Personal}/>
+                    <Route path='/chat/:userid' component = {Chat}/>
                     <Route component={NotFound}/>
                 </Switch>
-                {currentNav? <NavFooter/> :null}
+                {currentNav ? <NavFooter navList={this.navList}/> : null}
             </div>
         )
     }

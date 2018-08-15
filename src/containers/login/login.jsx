@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {Redirect} from 'react-router-dom'
 import {login} from '../../redux/actions'
 import Logo from '../../components/Logo/logo'
-import '../../assets/css/index.less'
+
  class Login extends Component{
     state={
         username:'',

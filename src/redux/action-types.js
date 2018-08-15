@@ -3,4 +3,6 @@ export const ERROR_MSG = 'ERROR_MSG';
 // 接收用户
 export const RECEIVE_USER = 'RECEIVE_USER'
 // 重置用户
-export const RESET_USER = 'RESET_USER'
+export const RESET_USER = 'RESET_USER';
+export const RECEIVE_USER_LIST = 'RECEIVE_USER_LIST';
+
