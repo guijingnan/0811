@@ -4,3 +4,5 @@ export const reqLogin=(user)=>ajax('/login',user,'POST');
 export const reqUpdateUser=(user)=>ajax('/update',user,'POST');
 export const reqUser = () => ajax('/user');
 export const reqUserList = (type) =>ajax('/userlist',{type});
+export const reqMsgList = () =>ajax('/msglist');
+export const reqReadMsg = (from) =>ajax('/readmsg',{from},'POST')

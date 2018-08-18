@@ -9,7 +9,9 @@ import {
   ERROR_MSG,
   RECEIVE_USER,
   RESET_USER,
-  RECEIVE_USER_LIST
+  RECEIVE_USER_LIST,
+  RECEIVE_CHAT_MSGS,
+  RECEIVE_CHAT_MSG
 
 } from './action-types'
 
@@ -46,9 +48,38 @@ function userList(state=initUserList,action) {
           return state
     }
 }
+const initChat = {
+  users:{},
+  chatMsg:[],
+  unReadCount:0
+}
+function chat(state = initChat,action) {
+    switch (action.type){
+        case RECEIVE_CHAT_MSGS:
+          console.log("2");
+          const {users,chatMsgs} = action.data;
+          console.log("chatMsgs",chatMsgs)
+          return {
+              users:users,
+              chatMsgs:chatMsgs,
+              unReadCount:0
+          }
+        case RECEIVE_CHAT_MSG:
+            const chatMsg = action.data;
+            console.log("chatMsg",chatMsg)
+            return {
+                users:state.users,
+                chatMsgs:[...state.chatMsgs,chatMsg],
+                unReadCount:0
+            }
+        default :
+          return state;
+    }
+}
 export default combineReducers({
   user,
-  userList
+  userList,
+  chat
 })
 
 
