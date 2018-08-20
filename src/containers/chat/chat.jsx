@@ -1,7 +1,7 @@
 import React , {Component} from 'react'
 import {NavBar, List, InputItem,Icon,Grid} from 'antd-mobile'
 import {connect} from 'react-redux'
-import {sendMsg} from '../../redux/actions'
+import {sendMsg,readMsg} from '../../redux/actions'
 const Item = List.Item;
 class Chat extends Component{
     state={
@@ -31,6 +31,15 @@ class Chat extends Component{
     }
     componentDidUpdate(){
         window.scrollTo(0, document.body.scrollHeight)
+    }
+    componentWillUnmount() {
+        // 更新未读消息为已读
+        // 当前用户id: from
+        const meId = this.props.user._id
+        // 目标用户的id: to
+        const targetId = this.props.match.params.userid;
+        console.log(meId,targetId)
+        this.props.readMsg(targetId, meId)
     }
     toggleEmojis=()=>{
 const isShow = !this.state.isShow;
@@ -121,7 +130,7 @@ this.setState({isShow});
 }
 export default connect(
     state=>({user:state.user,chat:state.chat}),
-    {sendMsg}
+    {sendMsg,readMsg}
 
 )(Chat)
 /*当点击发送时，就触发send函数，目的是发送消息，触发异步actions,然后再去actions里面

@@ -96,13 +96,13 @@ import NotFound from "../../components/not-found/not-found";
                     <Route path='/chat/:userid' component = {Chat}/>
                     <Route component={NotFound}/>
                 </Switch>
-                {currentNav ? <NavFooter navList={this.navList}/> : null}
+                {currentNav ? <NavFooter navList={this.navList} unReadCount={this.props.unReadCount}/> : null}
             </div>
         )
     }
 }
 export default connect(
-    state => ({user: state.user}),
+    state => ({user: state.user,unReadCount:state.chat.unReadCount}),
     {getUser}
 )(Main)
 /*实现自动更新*/

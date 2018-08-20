@@ -1,5 +1,5 @@
-import {AUTH_SUCCESS,ERROR_MSG,RECEIVE_USER,RESET_USER,RECEIVE_USER_LIST,RECEIVE_CHAT_MSGS,RECEIVE_CHAT_MSG} from './action-types';
-import {reqRegister,reqLogin,reqUpdateUser,reqUser,reqUserList,reqMsgList} from "../api/index";
+import {AUTH_SUCCESS,ERROR_MSG,RECEIVE_USER,RESET_USER,RECEIVE_USER_LIST,RECEIVE_CHAT_MSGS,RECEIVE_CHAT_MSG,MSG_READ} from './action-types';
+import {reqRegister,reqLogin,reqUpdateUser,reqUser,reqUserList,reqMsgList,reqReadMsg} from "../api/index";
 import io from 'socket.io-client'
 /*action对象*/
 const errMsg=(msg)=>({type:ERROR_MSG,data:msg});
@@ -7,8 +7,9 @@ const authSuccess=(user)=>({type:AUTH_SUCCESS,data:user});
 const receiveUser = (user) =>({type:RECEIVE_USER,data:user});
 export const resetUser = (msg)=>({type:RESET_USER,data:msg});
 const receiveUserList = (userList) =>({type:RECEIVE_USER_LIST,data:userList});
-const receiveChatMsgs = ({users, chatMsgs}) => ({type: RECEIVE_CHAT_MSGS, data: {users, chatMsgs}})
-const receiveChatMsg = (chatMsg) =>({type:RECEIVE_CHAT_MSG,data:chatMsg});
+const receiveChatMsgs = ({users, chatMsgs,meId}) => ({type: RECEIVE_CHAT_MSGS, data: {users, chatMsgs,meId}})
+const receiveChatMsg = (chatMsg,meId) =>({type:RECEIVE_CHAT_MSG,data:{chatMsg,meId}});
+const msgRead = ({count,targetId,meId}) =>({type:MSG_READ,data:{count,targetId,meId}})
 export function register({username,password,password2,type}) {
     // 进行前台表单验证, 如果不合法返回一个同步action对象, 显示提示信息
     if(!username || !password || !type){
@@ -88,13 +89,15 @@ export function getUserList(type) {
 /*连接服务器，然后某个浏览器绑定监听，用于接受服务器发送的消息，只需要监听一次*/
 /*通过meId来判断是否是我发的消息，和发给我的消息*/
 /*通过判断有没有socked，可以实现只连接一次*/
+/*闭包产生的问题，meId一直都呗引用，所以用的是老meId*/
 function initSocketIO(dispatch,meId) {
+    io.meId = meId;
     if(!io.socket) {
         io.socket = io('ws://localhost:4000');
         io.socket.on('receiveMsg', (chatMsg) => {
             console.log('浏览器接收到服务发送的消息', chatMsg);
-            if(chatMsg.from===meId || chatMsg.to===meId) {
-                dispatch(receiveChatMsg(chatMsg))
+            if(chatMsg.from === io.meId || chatMsg.to === io.meId) {
+                dispatch(receiveChatMsg(chatMsg,io.meId))
             }
         })
     }
@@ -117,7 +120,18 @@ async function getChatMsgs(dispatch, meId) {
     const result = response.data;
     if(result.code===0) {
         const {users, chatMsgs} = result.data
-        dispatch(receiveChatMsgs({users, chatMsgs}))
+        dispatch(receiveChatMsgs({users, chatMsgs,meId}))
+    }
+}
+export function readMsg(targetId,meId) {
+    return async dispatch =>{
+        //from是目标用户的id
+        const response = await reqReadMsg(targetId);
+        const result =response.data;
+        if(result.code === 0){
+            const count = result.data
+            dispatch(msgRead({count,targetId,meId}))
+        }
     }
 }
 

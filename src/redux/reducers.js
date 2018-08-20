@@ -11,8 +11,8 @@ import {
   RESET_USER,
   RECEIVE_USER_LIST,
   RECEIVE_CHAT_MSGS,
-  RECEIVE_CHAT_MSG
-
+  RECEIVE_CHAT_MSG,
+  MSG_READ
 } from './action-types'
 
 
@@ -56,21 +56,35 @@ const initChat = {
 function chat(state = initChat,action) {
     switch (action.type){
         case RECEIVE_CHAT_MSGS:
-          console.log("2");
-          const {users,chatMsgs} = action.data;
+          console.log("2",state);
+          var {users,chatMsgs,meId} = action.data;
           console.log("chatMsgs",chatMsgs)
-          return {
-              users:users,
-              chatMsgs:chatMsgs,
-              unReadCount:0
-          }
+            return {
+                users,
+                chatMsgs,
+                unReadCount: chatMsgs.reduce((preTotal, msg) => preTotal + (!msg.read&&msg.to===meId ? 1 : 0), 0),
+            }
         case RECEIVE_CHAT_MSG:
-            const chatMsg = action.data;
-            console.log("chatMsg",chatMsg)
+            var {chatMsg,meId} = action.data;
+            console.log("chatMsg",state.unReadCount)
+            return {
+                users: state.users,
+                chatMsgs: [...state.chatMsgs, chatMsg],
+                unReadCount: state.unReadCount + (!chatMsg.read&&chatMsg.to===meId ? 1 : 0),
+            }
+        case MSG_READ:
+            var {count,targetId,meId} = action.data;
+            console.log("chatMsgs",state.chatMsgs)
             return {
                 users:state.users,
-                chatMsgs:[...state.chatMsgs,chatMsg],
-                unReadCount:0
+                chatMsgs: state.chatMsgs.map(msg => {
+                    if(msg.from===targetId && msg.to===meId && !msg.read) {
+                        return {...msg, read: true}
+                    } else {
+                        return msg
+                    }
+                }),
+                unReadCount:state.unReadCount - count
             }
         default :
           return state;
